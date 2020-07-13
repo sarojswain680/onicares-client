@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../App';
 
 const NavBar = () => {
-    const { state, dispatch } = useContext(UserContext);
+    // const { state, dispatch } = useContext(UserContext);
+
+    const user = localStorage.getItem('jwt');
     const renderList = () => {
-        if (state) {
+        if (user) {
             return [
                 <li><Link to="/profile">Profile</Link></li>,
                 <li><Link to="/create">Create post</Link></li>

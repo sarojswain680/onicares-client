@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../App';
+import React, { useEffect, useState } from 'react';
 
 const Home = () => {
     const [data, setData] = useState([])
@@ -16,6 +15,32 @@ const Home = () => {
                 setData(result.data)
             })
     }, [])
+
+    const makeComment = (text, postId) => {
+        fetch('/comment', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("jwt")
+            },
+            body: JSON.stringify({
+                postId: postId,
+                text: text
+            })
+        }).then((res) => res.json)
+            .then((result) => {
+                const newData = data.map(item => {
+                    if (item._id == result._id) {
+                        return result
+                    } else {
+                        return item
+                    }
+                })
+                setData(newData)
+            }).catch((err) => {
+                console.log(err)
+            })
+    }
 
     const likePost = (id) => {
         fetch('/like', {
@@ -86,10 +111,23 @@ const Home = () => {
                                 <h6>{item.likes.length} likes</h6>
                                 <h6>{item.title}</h6>
                                 <p>{item.description}</p>
-                                <input
-                                    type="text"
-                                    placeholder="add a comment"
-                                />
+                                {
+                                    item.comments.map((record) => {
+                                        console.log('vvdvdv', record)
+                                        return (
+                                            <h6><span style={{ fontWeight: "500" }}>{record.postedBy.name}</span>{record.text}</h6>
+                                        )
+                                    })
+                                }
+                                <form onSubmit={(e) => {
+                                    e.preventDefault()
+                                    makeComment(e.target[0].value, item._id)
+                                }}>
+                                    <input
+                                        type="text"
+                                        placeholder="add a comment"
+                                    />
+                                </form>
                             </div>
                         </div>
                     )

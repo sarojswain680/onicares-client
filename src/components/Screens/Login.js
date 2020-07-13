@@ -1,5 +1,5 @@
 import M from 'materialize-css';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 
@@ -30,8 +30,10 @@ const Login = () => {
                 if (data.error) {
                     return M.toast({ html: data.error, classes: "#c62828 red darken-3" })
                 } else {
+                    console.log('reewwegwer', data.token)
+                    console.log('reewwegwer....', data.user)
                     localStorage.setItem("jwt", data.token)
-                    localStorage.setItem("user", JSON.stringify(data.data))
+                    localStorage.setItem("user", JSON.stringify(data.user))
                     // dispatch({ type: "USER", payload: data.data })
                     M.toast({ html: data.message, classes: "#00695c teal darken-3" })
                     history.push("/")
